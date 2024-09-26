@@ -14,7 +14,8 @@ import java.util.List;
 @AllArgsConstructor @NoArgsConstructor
 public class Users {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;

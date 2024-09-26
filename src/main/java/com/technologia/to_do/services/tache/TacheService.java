@@ -10,20 +10,13 @@ import java.util.List;
 public interface TacheService {
     TacheResponse save(Tache tache);
     List<TacheResponse> findByStatut(Statut statut);
-    List<TacheResponse> findByAuthAndStatut(Statut statut);
-    List<TacheResponse> fibdByAuthAndTypeAndStatut(Type type, Statut statut);
     TacheResponse findByIdAndStatut(Long id , Statut statut);
-
-    List<TacheResponse> findByState(Statut statut);
-
-    List<TacheResponse> findByAuthAndTypeAndState(Type type, Statut statut);
-
-    List<TacheResponse> findByAuthAndTypeAndStatut(Type type, Statut statut);
-
-    TacheResponse findByIdAndState(Long id, Statut statut);
-
     TacheResponse update(Tache tache);
     TacheResponse assign(Tache tache);
     TacheResponse mapToResponse(Tache tache);
     List<TacheResponse> mapToResponse(List<Tache> tache);
+
+    List<TacheResponse> findByAuthAndStatut(Statut statut);
+
+    List<TacheResponse> findByAuthAndTypeAndStatut(Type type, Statut statut);
 }

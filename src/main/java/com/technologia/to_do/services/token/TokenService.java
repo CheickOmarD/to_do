@@ -6,4 +6,6 @@ import com.technologia.to_do.models.Users;
 public interface TokenService {
     Token save(Users users, String token);
     void  revokedAllUsersTokens(Users users);
+
+    void revokeAllUsersTokens(Users users);
 }

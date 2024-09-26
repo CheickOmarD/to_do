@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class LogoutServiceImpl implements LogoutHandler {
+public class LogoutServiceImpl implements LogoutService,LogoutHandler {
 
     private final TokenRepository tokenRepository;
 

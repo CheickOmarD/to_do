@@ -31,7 +31,8 @@ public class UsersServiceImpl implements UsersService {
         if (phoneNumber != null) {
             throw new AlreadyExistException("Le numéro de téléphone est déjà utilisé.");
         }
-        Users email = (Users) usersRepository.findByEmailAndStatutNot(users.getEmail(), Statut.DELETE);
+        Users email = (Users) usersRepository
+                .findByEmailAndStatutNot(users.getEmail(), Statut.DELETE);
         if (email != null) {
             throw new AlreadyExistException("Cette adresse email est déjà utilisée.");
         }
@@ -66,7 +67,8 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UsersResponse update(Users users) {
-        Users userToUpdate = usersRepository.findByIdAndStatutNot(users.getId(), Statut.ACTIVATED);
+        Users userToUpdate = usersRepository
+                .findByIdAndStatutNot(users.getId(), Statut.ACTIVATED);
         if (userToUpdate == null) {
             throw new NotFoundException("Cet utilisateur n'existe pas.");
         }
@@ -89,7 +91,8 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UsersResponse activate(Users users) {
-        Users userToActivate = usersRepository.findByIdAndStatutNot(users.getId(), Statut.DELETE);
+        Users userToActivate = usersRepository
+                .findByIdAndStatutNot(users.getId(), Statut.DELETE);
         if (userToActivate == null) {
             throw new NotFoundException("Cet utilisateur n'existe pas.");
         }

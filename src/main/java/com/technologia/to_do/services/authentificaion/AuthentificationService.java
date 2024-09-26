@@ -7,4 +7,6 @@ import com.technologia.to_do.models.Users;
 public interface AuthentificationService {
     AuthentificationResponse authentificate(AuthentificationRequest authentificationRequest);
     Users getAuthor();
+
+    AuthentificationResponse authenticate(AuthentificationRequest request);
 }

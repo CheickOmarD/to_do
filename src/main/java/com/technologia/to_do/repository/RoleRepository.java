@@ -3,6 +3,7 @@ package com.technologia.to_do.repository;
 import com.technologia.to_do.enums.Statut;
 import com.technologia.to_do.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

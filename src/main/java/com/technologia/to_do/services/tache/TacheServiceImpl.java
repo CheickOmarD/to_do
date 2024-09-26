@@ -40,22 +40,6 @@ public class TacheServiceImpl implements TacheService {
     }
 
     @Override
-    public List<TacheResponse> findByAuthAndStatut(Statut statut) {
-        Users auth = authentificationService.getAuthor();
-        List<Tache> taches = tacheRepository.findCreatedByIdOrAssignToIdAndStatut(auth.getId(), auth.getId(), statut);
-        taches.sort(Comparator.comparing(Tache::getCreatedAt));
-        return mapToResponse(taches);
-    }
-
-    @Override
-    public List<TacheResponse> findByAuthAndTypeAndStatut(Type type, Statut statut) {
-        Users auth = authentificationService.getAuthor();
-        List<Tache> taches = tacheRepository.findCreatedByIdOrAssignToIdAndTypeAndStatut(auth.getId(), auth.getId(), type, statut);
-        taches.sort(Comparator.comparing(Tache::getCreatedAt));
-        return mapToResponse(taches);
-    }
-
-    @Override
     public TacheResponse findByIdAndStatut(Long id, Statut statut) {
         Tache tache = tacheRepository.findByIdAndStatut(id, statut);
         if (tache == null) {
@@ -66,7 +50,8 @@ public class TacheServiceImpl implements TacheService {
 
     @Override
     public TacheResponse update(Tache tache) {
-        Tache tacheToUpdate = tacheRepository.findByIdAndStatut(tache.getId(), Statut.ACTIVATED);
+        Tache tacheToUpdate = tacheRepository
+                .findByIdAndStatut(tache.getId(), Statut.ACTIVATED);
         if (tacheToUpdate == null) {
             throw new NotFoundException("Cette tâche n'existe pas");
         }
@@ -78,7 +63,8 @@ public class TacheServiceImpl implements TacheService {
 
     @Override
     public TacheResponse assign(Tache tache) {
-        Tache tacheToAssign = tacheRepository.findByIdAndStatut(tache.getId(), Statut.ACTIVATED);
+        Tache tacheToAssign = tacheRepository
+                .findByIdAndStatut(tache.getId(), Statut.ACTIVATED);
         if (tacheToAssign == null) {
             throw new NotFoundException("Cette tâche n'existe pas");
         }
@@ -121,6 +107,35 @@ public class TacheServiceImpl implements TacheService {
     }
 
     @Override
+    public List<TacheResponse> findByAuthAndTypeAndStatut(Type type, Statut statut) {
+
+        // Récupère l'utilisateur authentifié
+        Users auth = authentificationService.getAuthor();
+        List<Tache> taches = tacheRepository
+                .findByCreatedByIdOrAssignToIdAndTypeAndStatut
+                        (auth.getId(), auth.getId(), type, statut);
+        // Trier par date de création
+        taches.sort(Comparator.comparing(Tache::getCreatedAt));
+          // Retourner la liste mappée à une réponse
+        return mapToResponse(taches);
+    }
+
+    @Override
+    public List<TacheResponse> findByAuthAndStatut(Statut statut) {
+
+        // Récupère l'utilisateur authentifié
+        Users auth = authentificationService.getAuthor();
+        List<Tache> taches = tacheRepository.findByCreatedByOrAssignToAndStatut(auth, auth, statut);
+
+        if (taches.isEmpty()) {
+            throw new NotFoundException
+                    ("Aucune tâche trouvée pour cet utilisateur avec le statut donné.");
+        }
+
+        return mapToResponse(taches);
+    }
+
+    @Override
     public List<TacheResponse> mapToResponse(List<Tache> tachesList) {
         List<TacheResponse> tacheResponses = new ArrayList<>();
         for (Tache tache : tachesList) {
@@ -128,4 +143,6 @@ public class TacheServiceImpl implements TacheService {
         }
         return tacheResponses;
     }
+
+
 }

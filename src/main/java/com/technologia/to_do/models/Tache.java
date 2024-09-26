@@ -14,22 +14,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor @NoArgsConstructor
 public class Tache {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private LocalDateTime createdAt = LocalDateTime.now();
-    @ManyToMany
+    @ManyToOne
     private Users createdBy;
-    @ManyToMany
+    @ManyToOne
     private Users assignTo;
     @Enumerated(value = EnumType.STRING)
     private Type type = Type.EN_COURS;
-
-    public Statut getStatut() {
-        return getStatut();
-    }
-
-    public void setStatut(Statut statut) {
-
-    }
+    @Enumerated(value = EnumType.STRING)
+    private Statut statut = Statut.ACTIVATED;
 }

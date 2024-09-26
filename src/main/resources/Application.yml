@@ -1,34 +1,25 @@
-# PostgreSQL configuration
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/to_do
     username: postgres
     password: PASSWORD
     driver-class-name: org.postgresql.Driver
-
+  main:
+    allow-circular-references: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 2MB
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  devtools:
-    restart:
-          enabled: true
-
-# Server configuration
-server:
-  port: 8080
-  servlet:
-    context-path: /api
-
-# JWT configuration
-jwt:
-  secret: mySecretKey
-  expiration: 86400000
-  tokenPrefix: Bearer
-  headerString: Authorization
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

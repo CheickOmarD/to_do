@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor @NoArgsConstructor
 public class Role {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @ManyToMany

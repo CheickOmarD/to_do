@@ -89,6 +89,11 @@ public class AuthentificationServiceImpl implements  AuthentificationService {
         return null;
     }
 
+    @Override
+    public AuthentificationResponse authenticate(AuthentificationRequest request) {
+        return null;
+    }
+
     Role getRoleByName(String name) {
         Role role = roleRepository.findByName(name);
         if (role == null) {
