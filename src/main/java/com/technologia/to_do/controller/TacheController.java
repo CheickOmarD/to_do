@@ -5,10 +5,14 @@ import com.technologia.to_do.enums.Statut;
 import com.technologia.to_do.enums.Type;
 import com.technologia.to_do.models.Tache;
 import com.technologia.to_do.services.tache.TacheService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin
@@ -60,4 +64,14 @@ public class TacheController {
     public TacheResponse assign(@RequestBody Tache tache) {
         return tacheService.assign(tache);
     }
+
+    @GetMapping("/export/excel")
+    public void exportTacheToExcel(HttpServletResponse response,
+                                   @RequestParam(required = false) @DateTimeFormat(iso =
+                                           DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                   @RequestParam(required = false) @DateTimeFormat(iso =
+                                           DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
+        tacheService.exportToExcel(response, startDate, endDate);
+    }
+
 }

@@ -9,10 +9,18 @@ import com.technologia.to_do.models.Tache;
 import com.technologia.to_do.models.Users;
 import com.technologia.to_do.repository.TacheRepository;
 import com.technologia.to_do.services.authentificaion.AuthentificationService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -142,6 +150,69 @@ public class TacheServiceImpl implements TacheService {
             tacheResponses.add(mapToResponse(tache));
         }
         return tacheResponses;
+    }
+
+    @Override
+    public List<TacheResponse> findByDates(LocalDate startDate, LocalDate endDate) {
+        List<Tache> taches = tacheRepository
+                .findByCreatedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+        taches.sort(Comparator.comparing(Tache::getCreatedAt));
+        return mapToResponse(taches);
+    }
+
+    @Override
+    public List<TacheResponse> findByAuthAndDates(LocalDate startDate, LocalDate endDate) {
+        Users auth = authentificationService.getAuthor();
+        List<Tache> taches = tacheRepository
+                .findByAssignToIdAndCreatedAtBetween(auth.getId(), startDate.atStartOfDay(),
+                        endDate.atTime(LocalTime.MAX));
+        taches.sort(Comparator.comparing(Tache::getCreatedAt));
+        return mapToResponse(taches);
+    }
+
+    @Override
+    public void exportToExcel(HttpServletResponse response, LocalDate startDate, LocalDate endDate) throws IOException {
+        List<Tache> taches;
+        if (startDate != null && endDate != null) {
+            taches = tacheRepository.findByCreatedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+        } else {
+            taches = tacheRepository.findAll();
+        }
+
+        // Créer le fichier Excel
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Tâches");
+
+        // Créer l'en-tête
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(1).setCellValue("Nom");
+        headerRow.createCell(2).setCellValue("Créé par");
+        headerRow.createCell(3).setCellValue("Assigné à");
+        headerRow.createCell(4).setCellValue("Date de création");
+        headerRow.createCell(5).setCellValue("Statut");
+
+        // Ajouter les données des tâches
+        int rowCount = 1;
+        for (Tache tache : taches) {
+            Row row = sheet.createRow(rowCount++);
+            row.createCell(0).setCellValue(tache.getId());
+            row.createCell(1).setCellValue(tache.getName());
+            row.createCell(2).setCellValue(tache.getCreatedBy().getFirstName() + " " + tache.getCreatedBy().getLastName());
+            row.createCell(3).setCellValue(tache.getAssignTo().getFirstName() + " " + tache.getAssignTo().getLastName());
+            row.createCell(4).setCellValue(tache.getCreatedAt().toString());
+            row.createCell(5).setCellValue(tache.getStatut().name());
+        }
+
+        // Configurer la réponse HTTP pour téléchargement
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=tasks.xlsx");
+
+        // Écrire dans la réponse
+        OutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
     }
 
 
