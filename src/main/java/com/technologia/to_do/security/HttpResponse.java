@@ -14,10 +14,8 @@ import java.util.Date;
 public class HttpResponse {
 private Date timeStamp;
 private  int httpStatusCode;
+private  HttpStatus httpStatus;
 private  String reason;
 private  String message;
 
-    public HttpResponse(Date date, int value, HttpStatus httpStatus,
-                        String upperCase, String forbiddenMessage) {
-    }
 }

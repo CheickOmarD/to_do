@@ -22,14 +22,6 @@ import java.io.IOException;
 @Component
 public class JwtAuthentificationTokenFilter extends OncePerRequestFilter {
 
-    /**
-     * @param request
-     * @param response
-     * @param filterChain
-     * @throws ServletException
-     * @throws IOException
-     */
-
     @Autowired
     private JwtService jwtService;
     @Autowired

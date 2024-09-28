@@ -8,6 +8,7 @@ import com.technologia.to_do.repository.RoleRepository;
 import com.technologia.to_do.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.List;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class SetupLoaderData {
+public class SetupLoaderData implements ApplicationListener<ContextRefreshedEvent> {
 
 private final UsersRepository usersRepository;
 private final RoleRepository roleRepository;
@@ -41,15 +42,15 @@ public void onApplicationEvent(ContextRefreshedEvent event){
 }
 
     void createUsersIfNotFound(List<Role> role){
-    Users users = usersRepository.findByEmailAndStatut("technologiacorp@gmail.com", Statut.ACTIVATED);
+    Users users = usersRepository.findByEmailAndStatut("technologia@gmail.com", Statut.ACTIVATED);
     if (users == null) {
         users = new Users();
-        users.setFirstName("technologiA");
+        users.setFirstName("technologia");
         users.setLastName("corp");
-        users.setEmail("technologiacorp@gmail.com");
+        users.setEmail("technologia@gmail.com");
         users.setPassword(passwordEncoder.encode(
                 "SoYeZlEcHaNgEmEnTqUeVoUsVoUlEzVoIrDaNsLeMoNdE2030"));
-        users.setPhoneNumber("+22391690592");
+        users.setPhoneNumber("22391690592");
     }
     users.setRoles(role);
     usersRepository.save(users);

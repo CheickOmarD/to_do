@@ -20,15 +20,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Component
 public class CustomAuthentificationEntryPoint implements AuthenticationEntryPoint {
-
-
-    /**
-     * @param request
-     * @param response
-     * @param authException
-     * @throws IOException
-     * @throws ServletException
-     */
     @Override
     public void commence(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException authException
