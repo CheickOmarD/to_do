@@ -20,6 +20,12 @@ public class Role {
     @ManyToMany
     @ToString.Exclude
     private List<Users> users = new ArrayList<>();
+
+    @Enumerated(value = EnumType.STRING)
     private Statut statut = Statut.ACTIVATED;
+
+    public Role(String name) {
+        this.name = name;
+    }
 
 }

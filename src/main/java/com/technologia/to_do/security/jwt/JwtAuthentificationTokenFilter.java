@@ -38,6 +38,7 @@ public class JwtAuthentificationTokenFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
         if(authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            System.out.println("no token");
             filterChain.doFilter(request,response);
             return;
         }
@@ -53,10 +54,10 @@ public class JwtAuthentificationTokenFilter extends OncePerRequestFilter {
                         null,
                         userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().getAuthentication();
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-filterChain.doFilter(request,response);
+        filterChain.doFilter(request,response);
 
     }
 }

@@ -21,15 +21,16 @@ import org.springframework.web.bind.annotation.*;
         private final AuthentificationService service;
         private final LogoutService logoutService;
 
-        @PostMapping("/sign")
+        @PostMapping
         @ResponseStatus(HttpStatus.OK)
-        AuthentificationResponse authenticate(@RequestBody AuthentificationRequest request) {
-            return service.authenticate(request);
+        AuthentificationResponse authentificate(@RequestBody AuthentificationRequest request) {
+            return service.authentificate(request);
         }
 
         @GetMapping("/logout")
         @ResponseStatus(HttpStatus.OK)
         public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
             logoutService.logout(request, response, authentication);
-    }
+        }
+        
 }

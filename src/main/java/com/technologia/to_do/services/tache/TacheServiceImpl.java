@@ -165,55 +165,62 @@ public class TacheServiceImpl implements TacheService {
         Users auth = authentificationService.getAuthor();
         List<Tache> taches = tacheRepository
                 .findByAssignToIdAndCreatedAtBetween(auth.getId(), startDate.atStartOfDay(),
-                        endDate.atTime(LocalTime.MAX));
+                        endDate.atStartOfDay());
         taches.sort(Comparator.comparing(Tache::getCreatedAt));
         return mapToResponse(taches);
     }
 
     @Override
     public void exportToExcel(HttpServletResponse response, LocalDate startDate, LocalDate endDate) throws IOException {
-        List<Tache> taches;
-        if (startDate != null && endDate != null) {
-            taches = tacheRepository.findByCreatedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
-        } else {
-            taches = tacheRepository.findAll();
+        List<Tache> taches = tacheRepository.findByCreatedAtBetween(startDate.atStartOfDay(), endDate.atStartOfDay());
+
+        if (!taches.isEmpty()) {
+            // Créer le fichier Excel
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("Tâches");
+
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("ID");
+            headerRow.createCell(1).setCellValue("Nom");
+            headerRow.createCell(2).setCellValue("Créé par");
+            headerRow.createCell(3).setCellValue("Assigné à");
+            headerRow.createCell(4).setCellValue("Date de création");
+            headerRow.createCell(5).setCellValue("Statut");
+            // Ajouter les données des tâches
+            int rowCount = 1;
+            for (Tache tache : taches) {
+                Row row = sheet.createRow(rowCount++);
+                if (tache.getId() != null) {
+                    row.createCell(0).setCellValue(tache.getId());
+                }
+                if (tache.getName() != null) {
+                    row.createCell(1).setCellValue(tache.getName());
+                }
+                if (tache.getAssignTo() != null) {
+                    row.createCell(3).setCellValue(tache.getAssignTo().getFirstName() + " " + tache.getAssignTo().getLastName());
+                }
+                if (tache.getCreatedBy() != null) {
+                    row.createCell(2).setCellValue(tache.getCreatedBy().getFirstName() + " " + tache.getCreatedBy().getLastName());
+                }
+                if (tache.getCreatedAt() != null) {
+                    row.createCell(4).setCellValue(tache.getCreatedAt().toString());
+                }
+                if (tache.getStatut() != null) {
+                    row.createCell(5).setCellValue(tache.getStatut().name());
+                }
+            }
+            // Configurer la réponse HTTP pour téléchargement
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=taches.xlsx");
+            // Écrire dans la réponse
+            OutputStream outputStream = response.getOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
+            outputStream.close();
+        }
+        else {
+            throw new NotFoundException("Cette liste n existe pas");
         }
 
-        // Créer le fichier Excel
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Tâches");
-
-        // Créer l'en-tête
-        Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("ID");
-        headerRow.createCell(1).setCellValue("Nom");
-        headerRow.createCell(2).setCellValue("Créé par");
-        headerRow.createCell(3).setCellValue("Assigné à");
-        headerRow.createCell(4).setCellValue("Date de création");
-        headerRow.createCell(5).setCellValue("Statut");
-
-        // Ajouter les données des tâches
-        int rowCount = 1;
-        for (Tache tache : taches) {
-            Row row = sheet.createRow(rowCount++);
-            row.createCell(0).setCellValue(tache.getId());
-            row.createCell(1).setCellValue(tache.getName());
-            row.createCell(2).setCellValue(tache.getCreatedBy().getFirstName() + " " + tache.getCreatedBy().getLastName());
-            row.createCell(3).setCellValue(tache.getAssignTo().getFirstName() + " " + tache.getAssignTo().getLastName());
-            row.createCell(4).setCellValue(tache.getCreatedAt().toString());
-            row.createCell(5).setCellValue(tache.getStatut().name());
-        }
-
-        // Configurer la réponse HTTP pour téléchargement
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=tasks.xlsx");
-
-        // Écrire dans la réponse
-        OutputStream outputStream = response.getOutputStream();
-        workbook.write(outputStream);
-        workbook.close();
-        outputStream.close();
     }
-
-
 }

@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-@CrossOrigin
 @RestController
+@CrossOrigin(origins = "*") // Remplacez "*" par des URLs spécifiques si nécessaire
 @RequiredArgsConstructor
 @RequestMapping("/taches")
 public class TacheController {
@@ -29,25 +29,25 @@ public class TacheController {
         return tacheService.save(tache);
     }
 
-    @GetMapping("/statut/{statut}")
+    @GetMapping("/statut")
     @ResponseStatus(HttpStatus.OK)
     public List<TacheResponse> findByStatut(@PathVariable Statut statut) {
         return tacheService.findByStatut(statut);
     }
 
-    @GetMapping("/auth/statut/{statut}")
+    @GetMapping("/auth/statut")
     @ResponseStatus(HttpStatus.OK)
     public List<TacheResponse> findByAuthAndStatut(@PathVariable Statut statut) {
         return tacheService.findByAuthAndStatut(statut);
     }
 
-    @GetMapping("/auth/type/{type}/statut/{statut}")
+    @GetMapping("/auth/type/statut")
     @ResponseStatus(HttpStatus.OK)
     public List<TacheResponse> findByAuthAndTypeAndStatut(@PathVariable Type type, @PathVariable Statut statut) {
         return tacheService.findByAuthAndTypeAndStatut(type, statut);
     }
 
-    @GetMapping("/{id}/statut/{statut}")
+    @GetMapping("/{id}/statut")
     @ResponseStatus(HttpStatus.OK)
     public TacheResponse findByIdAndStatut(@PathVariable Long id, @PathVariable Statut statut) {
         return tacheService.findByIdAndStatut(id, statut);
@@ -65,13 +65,10 @@ public class TacheController {
         return tacheService.assign(tache);
     }
 
-    @GetMapping("/export/excel")
+    @GetMapping("/export/{startDate}/{endDate}")
     public void exportTacheToExcel(HttpServletResponse response,
-                                   @RequestParam(required = false) @DateTimeFormat(iso =
-                                           DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                   @RequestParam(required = false) @DateTimeFormat(iso =
-                                           DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
+                                   @PathVariable(required = false) @DateTimeFormat(pattern= "yyyy-MM-dd") LocalDate startDate,
+                                   @PathVariable(required = false) @DateTimeFormat(pattern= "yyyy-MM-dd") LocalDate endDate) throws IOException {
         tacheService.exportToExcel(response, startDate, endDate);
     }
-
 }

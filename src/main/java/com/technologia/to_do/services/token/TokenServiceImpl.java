@@ -27,7 +27,7 @@ public class TokenServiceImpl implements TokenService {
                 .createdAt(LocalDateTime.now())
                 // initialisation de logout à null car l'utilisateur
                 // n'est pas encore déconnecté
-                .logout(null)
+                .logoutAt(null)
                 .users(users)
                 .build();
         return repository.save(savedToken);

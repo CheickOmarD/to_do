@@ -27,12 +27,12 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UsersResponse save(Users users) {
-        Users phoneNumber = usersRepository.findByPhoneNumber(users.getPhoneNumber());
+        Users phoneNumber = usersRepository.findByPhoneNumber(users.getPhoneNumber().trim());
         if (phoneNumber != null) {
             throw new AlreadyExistException("Le numéro de téléphone est déjà utilisé.");
         }
-        Users email = (Users) usersRepository
-                .findByEmailAndStatutNot(users.getEmail(), Statut.DELETE);
+        Users email = usersRepository
+                 .findByEmailAndStatutNot(users.getEmail(), Statut.DELETE);
         if (email != null) {
             throw new AlreadyExistException("Cette adresse email est déjà utilisée.");
         }

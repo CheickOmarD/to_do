@@ -16,9 +16,6 @@ public interface TacheService {
     TacheResponse findByIdAndStatut(Long id , Statut statut);
     TacheResponse update(Tache tache);
     TacheResponse assign(Tache tache);
-    TacheResponse mapToResponse(Tache tache);
-    List<TacheResponse> mapToResponse(List<Tache> tache);
-
     List<TacheResponse> findByAuthAndStatut(Statut statut);
 
     List<TacheResponse> findByAuthAndTypeAndStatut(Type type, Statut statut);
@@ -28,4 +25,9 @@ public interface TacheService {
     List<TacheResponse> findByAuthAndDates(LocalDate startDate, LocalDate endDate);
 
     void exportToExcel(HttpServletResponse response, LocalDate startDate, LocalDate endDate) throws IOException, IOException;
-}
+
+
+    TacheResponse mapToResponse(Tache tache);
+    List<TacheResponse> mapToResponse(List<Tache> tache);
+
+    }

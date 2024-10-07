@@ -22,13 +22,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AuthentificationServiceImpl implements  AuthentificationService {
+public class AuthentificationServiceImpl implements AuthentificationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -36,6 +35,7 @@ public class AuthentificationServiceImpl implements  AuthentificationService {
     private final TokenService tokenService;
     private final UsersRepository usersRepository;
 
+    @Override
     public AuthentificationResponse authentificate(AuthentificationRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -48,18 +48,11 @@ public class AuthentificationServiceImpl implements  AuthentificationService {
                     .map(GrantedAuthority::getAuthority)
                     .toList();
 
-            List<Role> roleList = new ArrayList<>();
-            List<String> roleNames = Arrays.asList("SUPER_ADMIN", "USER", "ADMIN", "SUPERVISOR", "CASHIER",
-                    "COURIER", "COMMERCIAL", "DISTRIBUTOR");
-
-            for (String authority : roles) {
-                if (roleNames.contains(authority)) {
-                    roleList.add(getRoleByName(authority));
-                }
+            Users author = getAuthor();
+            if (author != null) {
+                tokenService.revokedAllUsersTokens(author);
+                tokenService.save(author, token);
             }
-
-            tokenService.revokedAllUsersTokens(getAuthor());
-            tokenService.save(getAuthor(), token);
 
             return new AuthentificationResponse(
                     userDetails.getId(),
@@ -67,8 +60,8 @@ public class AuthentificationServiceImpl implements  AuthentificationService {
                     userDetails.getLastName(),
                     userDetails.getEmail(),
                     userDetails.getPhoneNumber(),
-                    (ArrayList<Role>) roleList,  // Réactiver cette ligne
-                    userDetails.getCreatedAt(),
+                    new ArrayList<>(),
+                    userDetails.getCreateAt(),
                     userDetails.getStatut(),
                     token
             );
@@ -77,20 +70,12 @@ public class AuthentificationServiceImpl implements  AuthentificationService {
         }
     }
 
-
-
-
     public Users getAuthor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String email = authentication.getName();
             return usersRepository.findByEmailAndStatut(email, Statut.ACTIVATED);
         }
-        return null;
-    }
-
-    @Override
-    public AuthentificationResponse authenticate(AuthentificationRequest request) {
         return null;
     }
 

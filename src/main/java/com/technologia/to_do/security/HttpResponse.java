@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 public class HttpResponse {
-private Date timeStamp;
+private  Date timeStamp;
 private  int httpStatusCode;
 private  HttpStatus httpStatus;
 private  String reason;

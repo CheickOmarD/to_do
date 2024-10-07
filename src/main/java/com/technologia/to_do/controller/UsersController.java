@@ -24,13 +24,13 @@ public class UsersController {
         return usersService.save(users);
     }
 
-    @GetMapping("/statut/{statut}")
+    @GetMapping("/statut/")
     @ResponseStatus(HttpStatus.OK)
     public List<UsersResponse> findByStatut(@PathVariable Statut statut) {
         return usersService.findByStatut(statut);
     }
 
-    @GetMapping("/statut-not/{statut}")
+    @GetMapping("/statut-not")
     @ResponseStatus(HttpStatus.OK)
     public List<UsersResponse> findByStatutNot(@PathVariable Statut statut) {
         return usersService.findByStatutNot(statut);
@@ -58,5 +58,5 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public UsersResponse activate(@RequestBody Users users) {
         return usersService.activate(users);
-    }
+     }
 }

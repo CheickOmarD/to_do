@@ -1,7 +1,17 @@
 package com.technologia.to_do.exceptions;
 
-public class ApiError extends RuntimeException{
-    public ApiError(String message) {
-        super(message);
-    }
+import lombok.*;
+import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class ApiError {
+    private HttpStatus status;
+    private String message;
+    private LocalDateTime timestamp = LocalDateTime.now();
 }

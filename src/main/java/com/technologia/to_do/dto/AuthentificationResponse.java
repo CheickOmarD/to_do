@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Getter @Setter
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthentificationResponse {
 
     private Long id;
@@ -22,8 +24,6 @@ public class AuthentificationResponse {
     private List<Role> roles;
     private LocalDateTime createdAt;
     private Statut statut;
-    private  String accessToken;
-
-    public AuthentificationResponse(Long id, String firstName, String lastName, String email, String phoneNumber, ArrayList<Role> roles, boolean createdAt, Statut statut, String token) {
-    }
+    private String accessToken;
 }
+

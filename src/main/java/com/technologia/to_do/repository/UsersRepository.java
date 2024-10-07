@@ -15,5 +15,5 @@ Users findByIdAndStatutNot(Long id, Statut statut);
 List<Users> findByStatut(Statut statut);
 List<Users> findByStatutNot(Statut statut);
 Users findByPhoneNumber(String phoneNumber);
-List<Users> findByEmailAndStatutNot(String email , Statut statut);
+Users findByEmailAndStatutNot(String email , Statut statut);
 }

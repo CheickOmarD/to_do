@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @ToString
 @Getter @Setter
 public class UserDetailsImpl implements UserDetails {
+
     private Long Id;
     private  String firstName;
     private  String lastName;

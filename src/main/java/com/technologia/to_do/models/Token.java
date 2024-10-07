@@ -20,15 +20,15 @@ public class Token {
     private boolean revoked;
     private boolean expired;
     private LocalDateTime createdAt;
-    private LocalDateTime logout;
+    private LocalDateTime logoutAt;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Users users;
 
-    public void setRevoked(boolean b) {
-    }
-
-    public void setLogoutAt(LocalDateTime now) {
-
-    }
+//    public void setRevoked(boolean b) {
+//    }
+//
+//    public void setLogoutAt(LocalDateTime now) {
+//
+//    }
 }

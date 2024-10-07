@@ -23,3 +23,22 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+      security:
+        user:
+          name: admin
+          password: admin
+          roles:
+            - ADMIN
+            - SUPER_ADMIN
+
+      server:
+        port: 8080
+
+      # Configuration CORS
+      cors:
+        allowed-origin-patterns: "*"
+
+      # Configuration pour le SetupLoaderData
+      setup:
+        admin-email: technologia@gmail.com
+        admin-password: SoYeZlEcHaNgEmEnTqUeVoUsVoUlEzVoIrDaNsLeMoNdE2030

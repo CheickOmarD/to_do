@@ -1,7 +1,10 @@
 package com.technologia.to_do.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 public class UnauthorizeException  extends RuntimeException{
-    public UnauthorizeException(String message) {
-        super(message);
-    }
+
+    private HttpStatus status = HttpStatus.UNAUTHORIZED;
+    private String message;
+
 }
